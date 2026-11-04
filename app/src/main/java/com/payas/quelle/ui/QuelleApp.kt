@@ -24,6 +24,14 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import com.payas.quelle.ui.screens.rememberStore
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +59,16 @@ enum class Destination(val label: String, val icon: ImageVector) {
 @Composable
 fun QuelleApp() {
     var current by rememberSaveable { mutableStateOf(Destination.Today) }
+
+    // Odak zamanlayıcısı hangi ekranda olunursa olsun süresi dolunca kapanır ve kaydedilir.
+    val store = rememberStore()
+    val timer by remember { store.data.map { it.timer }.distinctUntilChanged() }.collectAsState(initial = store.data.value.timer)
+    LaunchedEffect(timer) {
+        val t = timer ?: return@LaunchedEffect
+        if (t.isPaused) return@LaunchedEffect
+        delay((t.endAt - System.currentTimeMillis()).coerceAtLeast(0) + 200)
+        store.completeTimerIfDone(LocalDate.now().toString())
+    }
 
     Row(
         Modifier

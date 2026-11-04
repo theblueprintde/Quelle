@@ -2,6 +2,7 @@ package com.payas.quelle
 
 import android.app.Application
 import com.payas.quelle.data.QuelleStore
+import com.payas.quelle.reminders.FocusAlarm
 import com.payas.quelle.reminders.ReminderScheduler
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -19,6 +20,11 @@ class QuelleApplication : Application() {
         MainScope().launch {
             store.data.map { it.schedule }.distinctUntilChanged().collect {
                 ReminderScheduler.schedule(this@QuelleApplication, it)
+            }
+        }
+        MainScope().launch {
+            store.data.map { it.timer }.distinctUntilChanged().collect {
+                FocusAlarm.sync(this@QuelleApplication, it)
             }
         }
     }

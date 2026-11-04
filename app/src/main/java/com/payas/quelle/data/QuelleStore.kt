@@ -65,6 +65,51 @@ class QuelleStore(private val file: File) {
 
     fun deleteSchedule(id: String) = update { d -> d.copy(schedule = d.schedule.filterNot { it.id == id }) }
 
+    fun saveHabit(habit: Habit) = update { d ->
+        val exists = d.habits.any { it.id == habit.id }
+        d.copy(habits = if (exists) d.habits.map { if (it.id == habit.id) habit else it } else d.habits + habit)
+    }
+
+    fun deleteHabit(id: String) = update { d ->
+        d.copy(habits = d.habits.filterNot { it.id == id }, habitEntries = d.habitEntries.filterNot { it.habitId == id })
+    }
+
+    fun setHabitCount(habitId: String, date: String, count: Int) = update { it.setHabitCount(habitId, date, count) }
+
+    fun setMood(date: String, mood: Mood?) = update { it.setMood(date, mood) }
+
+    fun startTimer(mode: TimerMode, label: String) = update { it.startTimer(mode, label, System.currentTimeMillis()) }
+
+    fun pauseTimer() = update { it.pauseTimer(System.currentTimeMillis()) }
+
+    fun resumeTimer() = update { it.resumeTimer(System.currentTimeMillis()) }
+
+    fun resetTimer() = update { it.resetTimer() }
+
+    fun completeTimerIfDone(today: String) {
+        val now = System.currentTimeMillis()
+        val current = _data.value
+        if (current.completeTimerIfDone(now, today) != current) update { it.completeTimerIfDone(now, today) }
+    }
+
+    fun saveAssignment(a: Assignment) = update { d ->
+        val exists = d.assignments.any { it.id == a.id }
+        d.copy(assignments = if (exists) d.assignments.map { if (it.id == a.id) a else it } else d.assignments + a)
+    }
+
+    fun deleteAssignment(id: String) = update { d -> d.copy(assignments = d.assignments.filterNot { it.id == id }) }
+
+    fun saveNote(n: Note) = update { d ->
+        val exists = d.notes.any { it.id == n.id }
+        d.copy(notes = if (exists) d.notes.map { if (it.id == n.id) n else it } else d.notes + n)
+    }
+
+    fun deleteNote(id: String) = update { d -> d.copy(notes = d.notes.filterNot { it.id == id }) }
+
+    fun setGoal(date: String, goal: DailyGoal?) = update { it.setGoal(goal, date) }
+
+    fun saveReview(review: WeeklyReview) = update { it.saveReview(review) }
+
     companion object {
         fun newId(): String = UUID.randomUUID().toString()
     }

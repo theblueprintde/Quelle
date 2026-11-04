@@ -30,6 +30,9 @@
             android:name=".reminders.ReminderReceiver"
             android:exported="false" />
         <receiver
+            android:name=".reminders.FocusReceiver"
+            android:exported="false" />
+        <receiver
             android:name=".reminders.BootReceiver"
             android:exported="true">
             <intent-filter>

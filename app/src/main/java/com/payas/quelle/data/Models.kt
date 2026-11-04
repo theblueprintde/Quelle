@@ -40,6 +40,15 @@ enum class ScheduleKind(val label: String) {
 data class AppData(
     val tasks: List<Task> = emptyList(),
     val schedule: List<ScheduleItem> = emptyList(),
+    val habits: List<Habit> = emptyList(),
+    val habitEntries: List<HabitEntry> = emptyList(),
+    val moods: List<MoodEntry> = emptyList(),
+    val focusSessions: List<FocusSession> = emptyList(),
+    val timer: ActiveTimer? = null,
+    val assignments: List<Assignment> = emptyList(),
+    val notes: List<Note> = emptyList(),
+    val dailyGoals: List<DailyGoal> = emptyList(),
+    val weeklyReviews: List<WeeklyReview> = emptyList(),
 ) {
     fun tasksFor(date: String) = tasks.filter { it.date == date }.sortedBy { it.createdAt }
 
