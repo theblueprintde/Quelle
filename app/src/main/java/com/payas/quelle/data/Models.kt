@@ -45,6 +45,10 @@ data class AppData(
     val moods: List<MoodEntry> = emptyList(),
     val focusSessions: List<FocusSession> = emptyList(),
     val timer: ActiveTimer? = null,
+    val assignments: List<Assignment> = emptyList(),
+    val notes: List<Note> = emptyList(),
+    val dailyGoals: List<DailyGoal> = emptyList(),
+    val weeklyReviews: List<WeeklyReview> = emptyList(),
 ) {
     fun tasksFor(date: String) = tasks.filter { it.date == date }.sortedBy { it.createdAt }
 

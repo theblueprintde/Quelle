@@ -50,7 +50,9 @@ import com.payas.quelle.data.ScheduleItem
 import com.payas.quelle.data.ScheduleKind
 import com.payas.quelle.data.Task
 import com.payas.quelle.data.formatMinutes
+import com.payas.quelle.data.goalFor
 import com.payas.quelle.data.moodFor
+import com.payas.quelle.data.songFor
 import com.payas.quelle.data.quoteFor
 import com.payas.quelle.greetingFor
 import com.payas.quelle.ui.theme.BabyBlue
@@ -102,6 +104,11 @@ fun TodayScreen() {
                     Text("“${quote.text}”", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, lineHeight = 29.sp)
                     Text(quote.author, fontWeight = FontWeight.Bold)
                 }
+                GoalCard(
+                    goal = data.goalFor(todayKey),
+                    onSave = { store.setGoal(todayKey, it) },
+                    date = todayKey,
+                )
                 HabitsCard(
                     data = data,
                     today = today,
@@ -120,13 +127,16 @@ fun TodayScreen() {
                 modifier = Modifier.weight(1f).fillMaxHeight(),
             )
 
-            TasksCard(
-                tasks = data.tasksFor(todayKey),
-                onAdd = { store.addTask(it, todayKey) },
-                onToggle = { store.toggleTask(it.id) },
-                onDelete = { store.deleteTask(it.id) },
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-            )
+            Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                SongCard(songFor(today.dayOfYear))
+                TasksCard(
+                    tasks = data.tasksFor(todayKey),
+                    onAdd = { store.addTask(it, todayKey) },
+                    onToggle = { store.toggleTask(it.id) },
+                    onDelete = { store.deleteTask(it.id) },
+                    modifier = Modifier.weight(1f).fillMaxWidth(),
+                )
+            }
         }
     }
 

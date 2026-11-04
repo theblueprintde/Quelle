@@ -92,6 +92,24 @@ class QuelleStore(private val file: File) {
         if (current.completeTimerIfDone(now, today) != current) update { it.completeTimerIfDone(now, today) }
     }
 
+    fun saveAssignment(a: Assignment) = update { d ->
+        val exists = d.assignments.any { it.id == a.id }
+        d.copy(assignments = if (exists) d.assignments.map { if (it.id == a.id) a else it } else d.assignments + a)
+    }
+
+    fun deleteAssignment(id: String) = update { d -> d.copy(assignments = d.assignments.filterNot { it.id == id }) }
+
+    fun saveNote(n: Note) = update { d ->
+        val exists = d.notes.any { it.id == n.id }
+        d.copy(notes = if (exists) d.notes.map { if (it.id == n.id) n else it } else d.notes + n)
+    }
+
+    fun deleteNote(id: String) = update { d -> d.copy(notes = d.notes.filterNot { it.id == id }) }
+
+    fun setGoal(date: String, goal: DailyGoal?) = update { it.setGoal(goal, date) }
+
+    fun saveReview(review: WeeklyReview) = update { it.saveReview(review) }
+
     companion object {
         fun newId(): String = UUID.randomUUID().toString()
     }
