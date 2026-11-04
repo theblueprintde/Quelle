@@ -104,6 +104,9 @@ fun QuelleApp() {
                     ),
                 )
             }
+            Spacer(Modifier.weight(1f))
+            AccountItem()
+            Spacer(Modifier.height(12.dp))
         }
 
         Box(Modifier.fillMaxSize().padding(horizontal = 32.dp, vertical = 28.dp)) {

@@ -4,6 +4,7 @@ import android.app.Application
 import com.payas.quelle.data.QuelleStore
 import com.payas.quelle.reminders.FocusAlarm
 import com.payas.quelle.reminders.ReminderScheduler
+import com.payas.quelle.sync.SyncManager
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -12,10 +13,12 @@ import java.io.File
 
 class QuelleApplication : Application() {
     val store: QuelleStore by lazy { QuelleStore(File(filesDir, "quelle.json")) }
+    val sync: SyncManager by lazy { SyncManager(store) }
 
     override fun onCreate() {
         super.onCreate()
         ReminderScheduler.createChannel(this)
+        sync.start()
         // Program her değiştiğinde bir sonraki hatırlatmayı yeniden kur.
         MainScope().launch {
             store.data.map { it.schedule }.distinctUntilChanged().collect {
