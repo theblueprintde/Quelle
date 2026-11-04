@@ -49,6 +49,8 @@ data class AppData(
     val notes: List<Note> = emptyList(),
     val dailyGoals: List<DailyGoal> = emptyList(),
     val weeklyReviews: List<WeeklyReview> = emptyList(),
+    /** Son değişiklik anı (epoch ms); senkronda hangi tarafın yeni olduğunu belirler. */
+    val updatedAt: Long = 0,
 ) {
     fun tasksFor(date: String) = tasks.filter { it.date == date }.sortedBy { it.createdAt }
 

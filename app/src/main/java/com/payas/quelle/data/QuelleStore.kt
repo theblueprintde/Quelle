@@ -38,7 +38,24 @@ class QuelleStore(private val file: File) {
     }
 
     private fun update(change: (AppData) -> AppData) {
-        _data.updateAndGet(change)
+        _data.updateAndGet { old ->
+            val new = change(old)
+            if (new == old) old else new.copy(updatedAt = maxOf(System.currentTimeMillis(), old.updatedAt + 1))
+        }
+        persist()
+    }
+
+    /** Buluttan gelen daha yeni veriyi olduğu gibi alır (zaman damgası korunur). */
+    fun replaceFromRemote(remote: AppData) {
+        _data.value = remote
+        persist()
+    }
+
+    fun encode(data: AppData): String = json.encodeToString(AppData.serializer(), data)
+
+    fun decode(text: String): AppData = json.decodeFromString(AppData.serializer(), text)
+
+    private fun persist() {
         scope.launch {
             writeLock.withLock {
                 val tmp = File(file.parentFile, file.name + ".tmp")
