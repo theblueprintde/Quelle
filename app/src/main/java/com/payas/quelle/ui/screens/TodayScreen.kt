@@ -50,6 +50,7 @@ import com.payas.quelle.data.ScheduleItem
 import com.payas.quelle.data.ScheduleKind
 import com.payas.quelle.data.Task
 import com.payas.quelle.data.formatMinutes
+import com.payas.quelle.data.moodFor
 import com.payas.quelle.data.quoteFor
 import com.payas.quelle.greetingFor
 import com.payas.quelle.ui.theme.BabyBlue
@@ -75,23 +76,40 @@ fun TodayScreen() {
 
     var editing by remember { mutableStateOf<ScheduleItem?>(null) }
     var creating by remember { mutableStateOf(false) }
+    var habitDialog by remember { mutableStateOf<HabitDialogState?>(null) }
 
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-        Column {
-            Text(
-                now.format(dateFormat).replaceFirstChar { it.titlecase(turkish) },
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Row(verticalAlignment = Alignment.Bottom) {
+            Column(Modifier.weight(1f)) {
+                Text(
+                    now.format(dateFormat).replaceFirstChar { it.titlecase(turkish) },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text("${greetingFor(now.hour)}, Payas", fontSize = 36.sp, fontWeight = FontWeight.ExtraBold)
+            }
+            MoodPicker(
+                selected = data.moodFor(todayKey),
+                onSelect = { store.setMood(todayKey, it) },
             )
-            Text("${greetingFor(now.hour)}, Payas", fontSize = 36.sp, fontWeight = FontWeight.ExtraBold)
         }
 
         Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            val quote = quoteFor(today.dayOfYear)
-            QuelleCard("Günün sözü", Modifier.weight(1f), container = BabyBlue) {
-                Text("“${quote.text}”", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, lineHeight = 29.sp)
-                Text(quote.author, fontWeight = FontWeight.Bold)
+            Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                val quote = quoteFor(today.dayOfYear)
+                QuelleCard("Günün sözü", Modifier.fillMaxWidth(), container = BabyBlue) {
+                    Text("“${quote.text}”", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, lineHeight = 29.sp)
+                    Text(quote.author, fontWeight = FontWeight.Bold)
+                }
+                HabitsCard(
+                    data = data,
+                    today = today,
+                    onCount = { habit, count -> store.setHabitCount(habit.id, todayKey, count) },
+                    onAdd = { habitDialog = HabitDialogState(null) },
+                    onEdit = { habitDialog = HabitDialogState(it) },
+                    modifier = Modifier.weight(1f).fillMaxWidth(),
+                )
             }
 
             ProgramCard(
@@ -119,6 +137,14 @@ fun TodayScreen() {
             onSave = { items -> items.forEach(store::saveSchedule); creating = false },
             onDelete = null,
             onDismiss = { creating = false },
+        )
+    }
+    habitDialog?.let { state ->
+        HabitDialog(
+            initial = state.habit,
+            onSave = { store.saveHabit(it); habitDialog = null },
+            onDelete = state.habit?.let { h -> { store.deleteHabit(h.id); habitDialog = null } },
+            onDismiss = { habitDialog = null },
         )
     }
     editing?.let { item ->
