@@ -3,12 +3,6 @@ package com.payas.quelle.ui.screens
 import androidx.compose.runtime.Composable
 
 @Composable
-fun CalendarScreen() = ComingSoon(
-    "Takvim",
-    "Haftalık ders programı, aylık takvim ve o günün etkinlikleri burada olacak.",
-)
-
-@Composable
 fun FocusScreen() = ComingSoon(
     "Odak zamanlayıcı",
     "25 dakikalık odak ve mola zamanlayıcısı burada olacak.",
