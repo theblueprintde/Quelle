@@ -1,5 +1,6 @@
 package com.payas.quelle.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -16,27 +17,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.payas.quelle.ui.theme.*
 
-/** Tasarımdaki beyaz, yuvarlak köşeli kartlar. */
+/** İnce altın başlıklı, ince çerçeveli premium kartlar. */
 @Composable
 fun QuelleCard(
     title: String,
     modifier: Modifier = Modifier,
     container: Color = MaterialTheme.colorScheme.surface,
+    titleColor: Color = Gold,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(containerColor = container),
+        border = if (container == Midnight) null else BorderStroke(1.dp, Line),
     ) {
         Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(
                 title.uppercase(),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.ExtraBold,
-                letterSpacing = 1.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 2.sp,
+                color = titleColor,
             )
             content()
         }
@@ -47,7 +51,7 @@ fun QuelleCard(
 @Composable
 fun ComingSoon(title: String, description: String) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text(title, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
+        Text(title, fontSize = 32.sp, fontWeight = FontWeight.Medium, fontFamily = Display)
         QuelleCard("Yakında") {
             Text(description, style = MaterialTheme.typography.bodyLarge)
         }

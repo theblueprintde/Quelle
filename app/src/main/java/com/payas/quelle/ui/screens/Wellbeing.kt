@@ -47,11 +47,7 @@ import com.payas.quelle.data.Mood
 import com.payas.quelle.data.QuelleStore
 import com.payas.quelle.data.habitCount
 import com.payas.quelle.data.streak
-import com.payas.quelle.ui.theme.BabyBlueLight
-import com.payas.quelle.ui.theme.GreenDeep
-import com.payas.quelle.ui.theme.GreenLight
-import com.payas.quelle.ui.theme.InkMuted
-import com.payas.quelle.ui.theme.Water
+import com.payas.quelle.ui.theme.*
 import java.time.LocalDate
 
 /** "Bugün nasılsın?" seçimi. Seçili olana tekrar basınca seçim kalkar. */
@@ -64,7 +60,7 @@ fun MoodPicker(selected: Mood?, onSelect: (Mood?) -> Unit) {
             Row(
                 Modifier
                     .heightIn(min = 44.dp)
-                    .background(if (isSelected) BabyBlueLight else MaterialTheme.colorScheme.surface, RoundedCornerShape(99.dp))
+                    .background(if (isSelected) Champagne else MaterialTheme.colorScheme.surface, RoundedCornerShape(99.dp))
                     .clickable(role = Role.RadioButton) { onSelect(if (isSelected) null else mood) }
                     .padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -114,10 +110,10 @@ fun HabitsCard(
                             if (streak > 0) {
                                 Text(
                                     "$streak gün seri",
-                                    modifier = Modifier.background(GreenLight, RoundedCornerShape(99.dp)).padding(horizontal = 8.dp, vertical = 2.dp),
+                                    modifier = Modifier.background(Sage, RoundedCornerShape(99.dp)).padding(horizontal = 8.dp, vertical = 2.dp),
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.ExtraBold,
-                                    color = GreenDeep,
+                                    color = Emerald,
                                 )
                             }
                         }
@@ -133,7 +129,7 @@ fun HabitsCard(
                         val done = count >= 1
                         FilledTonalIconButton(onClick = { onCount(habit, if (done) 0 else 1) }) {
                             if (done) {
-                                Icon(Icons.Filled.Check, contentDescription = "${habit.name} yapıldı, geri al", tint = Water)
+                                Icon(Icons.Filled.Check, contentDescription = "${habit.name} yapıldı, geri al", tint = Gold)
                             } else {
                                 Icon(Icons.Filled.Add, contentDescription = "${habit.name} yapıldı olarak işaretle")
                             }

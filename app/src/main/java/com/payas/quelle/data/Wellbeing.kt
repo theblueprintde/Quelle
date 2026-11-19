@@ -17,11 +17,11 @@ data class HabitEntry(val habitId: String, val date: String, val count: Int)
 
 @Serializable
 enum class Mood(val label: String, val color: Long) {
-    Harika("Harika", 0xFF3E7D52),
-    Iyi("İyi", 0xFF7FC3DE),
-    Normal("Normal", 0xFFB9C9CD),
-    Yorgun("Yorgun", 0xFFE3B66B),
-    Kotu("Kötü", 0xFFD98A8A),
+    Harika("Harika", 0xFF2E5E4E),
+    Iyi("İyi", 0xFF6E9483),
+    Normal("Normal", 0xFFC9C1B2),
+    Yorgun("Yorgun", 0xFFC9A35E),
+    Kotu("Kötü", 0xFFB5615C),
 }
 
 @Serializable

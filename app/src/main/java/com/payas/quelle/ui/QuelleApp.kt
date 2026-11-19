@@ -1,6 +1,7 @@
 package com.payas.quelle.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -46,7 +47,7 @@ import com.payas.quelle.ui.screens.FocusScreen
 import com.payas.quelle.ui.screens.LessonsScreen
 import com.payas.quelle.ui.screens.TodayScreen
 import com.payas.quelle.ui.screens.WeekScreen
-import com.payas.quelle.ui.theme.Water
+import com.payas.quelle.ui.theme.*
 
 enum class Destination(val label: String, val icon: ImageVector) {
     Today("Bugün", Icons.Outlined.WbSunny),
@@ -77,16 +78,16 @@ fun QuelleApp() {
             .systemBarsPadding()
     ) {
         NavigationRail(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = Midnight,
             header = {
                 Box(
                     Modifier
                         .padding(top = 12.dp)
                         .size(52.dp)
-                        .background(Water, RoundedCornerShape(18.dp)),
+                        .border(1.dp, GoldBright, RoundedCornerShape(18.dp)),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Outlined.WaterDrop, contentDescription = "Quelle", tint = Color.White)
+                    Icon(Icons.Outlined.WaterDrop, contentDescription = "Quelle", tint = GoldBright)
                 }
                 Spacer(Modifier.height(16.dp))
             },
@@ -97,11 +98,7 @@ fun QuelleApp() {
                     onClick = { current = dest },
                     icon = { Icon(dest.icon, contentDescription = null) },
                     label = { Text(dest.label) },
-                    colors = NavigationRailItemDefaults.colors(
-                        indicatorColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        selectedTextColor = MaterialTheme.colorScheme.primary,
-                    ),
+                    colors = railItemColors(),
                 )
             }
             Spacer(Modifier.weight(1f))
@@ -120,3 +117,15 @@ fun QuelleApp() {
         }
     }
 }
+
+/** Gece mavisi menüde altın vurgulu öğe renkleri. */
+@Composable
+fun railItemColors() = NavigationRailItemDefaults.colors(
+    indicatorColor = MidnightSoft,
+    selectedIconColor = GoldBright,
+    selectedTextColor = GoldBright,
+    unselectedIconColor = Color(0xFFA9AEBB),
+    unselectedTextColor = Color(0xFFA9AEBB),
+    disabledIconColor = Color(0xFF5E6577),
+    disabledTextColor = Color(0xFF5E6577),
+)

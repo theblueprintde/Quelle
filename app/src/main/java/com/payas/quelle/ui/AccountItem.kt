@@ -29,7 +29,7 @@ import com.payas.quelle.sync.SignInResult
 import com.payas.quelle.sync.SyncStatus
 import com.payas.quelle.sync.signInWithGoogle
 import com.payas.quelle.sync.signOut
-import com.payas.quelle.ui.theme.InkMuted
+import com.payas.quelle.ui.theme.*
 import kotlinx.coroutines.launch
 
 /** Yan menünün altındaki hesap düğmesi: giriş yap / senkron durumu / çıkış. */
@@ -70,6 +70,7 @@ fun AccountItem() {
         },
         icon = { Icon(icon, contentDescription = null) },
         label = { Text(if (user == null) "Giriş yap" else "Senkron") },
+        colors = com.payas.quelle.ui.railItemColors(),
     )
 
     if (showDialog) {

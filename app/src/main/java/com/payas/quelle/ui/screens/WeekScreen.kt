@@ -44,11 +44,7 @@ import com.payas.quelle.data.mondayOf
 import com.payas.quelle.data.moodFor
 import com.payas.quelle.data.reviewFor
 import com.payas.quelle.data.weekStats
-import com.payas.quelle.ui.theme.BabyBlueLight
-import com.payas.quelle.ui.theme.GreenDeep
-import com.payas.quelle.ui.theme.InkMuted
-import com.payas.quelle.ui.theme.Water
-import com.payas.quelle.ui.theme.WaterDeep
+import com.payas.quelle.ui.theme.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -82,11 +78,11 @@ fun WeekScreen() {
                         Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Sonraki hafta")
                     }
                 }
-                Text("Haftan nasıl geçti?", fontSize = 34.sp, fontWeight = FontWeight.ExtraBold)
+                Text("Haftan nasıl geçti?", fontSize = 36.sp, fontWeight = FontWeight.Medium, fontFamily = Display)
             }
-            StatBox("${stats.tasksDone}/${stats.tasksTotal}", "GÖREV", WaterDeep)
-            StatBox("${stats.focusSessions}", "ODAK OTURUMU", GreenDeep)
-            StatBox("${stats.bestStreak} gün", "EN UZUN SERİ", WaterDeep)
+            StatBox("${stats.tasksDone}/${stats.tasksTotal}", "GÖREV", Midnight)
+            StatBox("${stats.focusSessions}", "ODAK OTURUMU", Emerald)
+            StatBox("${stats.bestStreak} gün", "EN UZUN SERİ", Midnight)
         }
 
         Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
@@ -105,7 +101,7 @@ fun WeekScreen() {
                                     .padding(vertical = 4.dp)
                                     .fillMaxWidth()
                                     .fillMaxHeight(0.75f * count / max + 0.02f)
-                                    .background(if (weekStart.plusDays(i.toLong()) == today) Water else Color(0xFF7FC3DE), RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
+                                    .background(if (weekStart.plusDays(i.toLong()) == today) Gold else GoldSoft, RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
                             )
                             Text(DAY_LETTERS[i], fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = InkMuted)
                         }
@@ -119,7 +115,7 @@ fun WeekScreen() {
                             Box(
                                 Modifier
                                     .size(26.dp)
-                                    .background(mood?.let { Color(it.color) } ?: Color(0xFFEEF2F3), CircleShape)
+                                    .background(mood?.let { Color(it.color) } ?: Mist, CircleShape)
                             )
                         }
                     }
@@ -146,7 +142,7 @@ private fun StatBox(value: String, label: String, color: Color) {
             .padding(horizontal = 18.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(value, fontSize = 26.sp, fontWeight = FontWeight.ExtraBold, color = color)
+        Text(value, fontSize = 28.sp, fontWeight = FontWeight.Medium, fontFamily = Display, color = color)
         Text(label, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = InkMuted)
     }
 }
@@ -175,7 +171,7 @@ private fun HabitGrid(data: AppData, weekStart: LocalDate, modifier: Modifier) {
                                 Box(
                                     Modifier
                                         .size(28.dp)
-                                        .background(if (done) Color(0xFF3E7D52) else Color(0xFFE4EEF0), RoundedCornerShape(8.dp))
+                                        .background(if (done) Emerald else Line, RoundedCornerShape(8.dp))
                                 )
                             }
                         }
@@ -199,7 +195,7 @@ private fun ReflectionCard(
     var nextGoal by remember(saved) { mutableStateOf(saved.nextGoal) }
     val changed = achieved != saved.achieved || missed != saved.missed || nextGoal != saved.nextGoal
 
-    QuelleCard("Kendine sor", modifier, container = BabyBlueLight) {
+    QuelleCard("Kendine sor", modifier, container = Champagne) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             OutlinedTextField(achieved, { achieved = it }, label = { Text("Bu hafta neyi başardım?") }, minLines = 3, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(missed, { missed = it }, label = { Text("Neyi aksattım?") }, minLines = 3, modifier = Modifier.fillMaxWidth())

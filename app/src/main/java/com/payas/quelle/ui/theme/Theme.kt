@@ -8,15 +8,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 
 private val QuelleColors = lightColorScheme(
-    primary = WaterDeep,
+    primary = Midnight,
     onPrimary = Surface,
-    primaryContainer = BabyBlueLight,
+    primaryContainer = Champagne,
     onPrimaryContainer = Ink,
-    secondary = GreenDeep,
+    secondary = Emerald,
     onSecondary = Surface,
-    secondaryContainer = GreenLight,
-    onSecondaryContainer = GreenDeep,
-    tertiary = Water,
+    secondaryContainer = Sage,
+    onSecondaryContainer = Emerald,
+    tertiary = Gold,
+    onTertiary = Surface,
+    outline = LineStrong,
+    outlineVariant = Line,
+    surfaceVariant = Mist,
+    error = Danger,
+    surfaceContainerLowest = Surface,
+    surfaceContainerLow = Highlight,
+    surfaceContainer = Background,
+    surfaceContainerHigh = Surface,
+    surfaceContainerHighest = Mist,
     background = Background,
     onBackground = Ink,
     surface = Surface,
@@ -25,9 +35,9 @@ private val QuelleColors = lightColorScheme(
 )
 
 private val QuelleShapes = Shapes(
-    small = RoundedCornerShape(12.dp),
-    medium = RoundedCornerShape(16.dp),
-    large = RoundedCornerShape(24.dp),
+    small = RoundedCornerShape(10.dp),
+    medium = RoundedCornerShape(14.dp),
+    large = RoundedCornerShape(20.dp),
 )
 
 @Composable
