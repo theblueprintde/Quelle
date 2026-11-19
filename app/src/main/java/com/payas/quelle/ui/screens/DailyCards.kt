@@ -44,10 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.payas.quelle.data.DailyGoal
 import com.payas.quelle.data.Song
-import com.payas.quelle.ui.theme.Green
-import com.payas.quelle.ui.theme.GreenDeep
-import com.payas.quelle.ui.theme.GreenLight
-import com.payas.quelle.ui.theme.InkMuted
+import com.payas.quelle.ui.theme.*
 
 /** Günün tek ana hedefi: yaz, kaydet, bitince işaretle. */
 @Composable
@@ -75,7 +72,7 @@ fun GoalCard(goal: DailyGoal?, date: String, onSave: (DailyGoal?) -> Unit) {
                 Box(
                     Modifier
                         .size(30.dp)
-                        .background(if (goal.done) Color(0xFF3E7D52) else GreenLight, RoundedCornerShape(10.dp))
+                        .background(if (goal.done) Emerald else Sage, RoundedCornerShape(10.dp))
                         .clickable(role = Role.Checkbox, onClickLabel = "Hedefi işaretle") { onSave(goal.copy(done = !goal.done)) },
                     contentAlignment = Alignment.Center,
                 ) {
@@ -101,19 +98,19 @@ fun GoalCard(goal: DailyGoal?, date: String, onSave: (DailyGoal?) -> Unit) {
 @Composable
 fun SongCard(song: Song) {
     val context = LocalContext.current
-    QuelleCard("Günün şarkısı", Modifier.fillMaxWidth(), container = GreenLight) {
+    QuelleCard("Günün şarkısı", Modifier.fillMaxWidth(), container = Sage) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            Box(Modifier.size(52.dp).background(Green, RoundedCornerShape(14.dp)), contentAlignment = Alignment.Center) {
+            Box(Modifier.size(52.dp).background(EmeraldSoft, RoundedCornerShape(14.dp)), contentAlignment = Alignment.Center) {
                 Icon(Icons.Filled.MusicNote, contentDescription = null, tint = Color.White)
             }
             Column(Modifier.weight(1f)) {
                 Text(song.title, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)
-                Text(song.artist, fontWeight = FontWeight.SemiBold, color = GreenDeep)
+                Text(song.artist, fontWeight = FontWeight.SemiBold, color = Emerald)
             }
         }
         Button(
             onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(song.youtubeMusicUrl))) },
-            colors = ButtonDefaults.buttonColors(containerColor = GreenDeep),
+            colors = ButtonDefaults.buttonColors(containerColor = Emerald),
             modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
         ) {
             Icon(Icons.Filled.PlayArrow, contentDescription = null)

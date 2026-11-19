@@ -50,11 +50,7 @@ import com.payas.quelle.data.AppData
 import com.payas.quelle.data.ScheduleItem
 import com.payas.quelle.data.ScheduleKind
 import com.payas.quelle.data.formatMinutes
-import com.payas.quelle.ui.theme.BabyBlueLight
-import com.payas.quelle.ui.theme.GreenDeep
-import com.payas.quelle.ui.theme.GreenLight
-import com.payas.quelle.ui.theme.InkMuted
-import com.payas.quelle.ui.theme.Water
+import com.payas.quelle.ui.theme.*
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -138,7 +134,8 @@ private fun WeekCard(
             Text(
                 "${monday.dayOfMonth} – ${sunday.format(rangeFormat)}",
                 fontSize = 26.sp,
-                fontWeight = FontWeight.ExtraBold,
+                fontWeight = FontWeight.Medium,
+                fontFamily = Display,
                 modifier = Modifier.weight(1f),
             )
             IconButton(onClick = { onWeekChange(-1) }) {
@@ -159,7 +156,7 @@ private fun WeekCard(
                     Modifier
                         .weight(1f)
                         .padding(horizontal = 2.dp)
-                        .background(if (isToday) Water else Color.Transparent, RoundedCornerShape(10.dp))
+                        .background(if (isToday) Gold else Color.Transparent, RoundedCornerShape(10.dp))
                         .clickable(role = Role.Button) { onSelectDay(day) }
                         .padding(vertical = 6.dp),
                     contentAlignment = Alignment.Center,
@@ -197,7 +194,7 @@ private fun WeekCard(
                     Modifier
                         .weight(1f)
                         .height(HOUR_HEIGHT * (LAST_HOUR - FIRST_HOUR))
-                        .background(if (day == today) Color(0xFFF5FBFD) else Color.Transparent)
+                        .background(if (day == today) Highlight else Color.Transparent)
                 ) {
                     // Saat çizgileri
                     for (h in 0 until (LAST_HOUR - FIRST_HOUR)) {
@@ -206,7 +203,7 @@ private fun WeekCard(
                                 .offset(y = HOUR_HEIGHT * h)
                                 .fillMaxWidth()
                                 .height(1.dp)
-                                .background(Color(0xFFE4EEF0))
+                                .background(Line)
                         )
                     }
                     data.scheduleFor(day.dayOfWeek.value).forEach { item ->
@@ -240,10 +237,10 @@ private fun WeekBlock(item: ScheduleItem, onClick: () -> Unit) {
 
 @Composable
 private fun kindColors(kind: ScheduleKind): Pair<Color, Color> = when (kind) {
-    ScheduleKind.Ders -> BabyBlueLight to MaterialTheme.colorScheme.onSurface
-    ScheduleKind.Calisma, ScheduleKind.Spor -> GreenLight to GreenDeep
-    ScheduleKind.Etkinlik -> Color(0xFFFCE9C8) to Color(0xFF7A4E0E)
-    ScheduleKind.Diger -> Color(0xFFEEF2F3) to InkMuted
+    ScheduleKind.Ders -> Champagne to MaterialTheme.colorScheme.onSurface
+    ScheduleKind.Calisma, ScheduleKind.Spor -> Sage to Emerald
+    ScheduleKind.Etkinlik -> WarnSoft to Warn
+    ScheduleKind.Diger -> Mist to InkMuted
 }
 
 @Composable
@@ -291,8 +288,8 @@ private fun MonthCard(selected: LocalDate, today: LocalDate, data: AppData, onSe
                                 .padding(2.dp)
                                 .background(
                                     when {
-                                        isSelected -> Water
-                                        date == today -> BabyBlueLight
+                                        isSelected -> Gold
+                                        date == today -> Champagne
                                         else -> Color.Transparent
                                     },
                                     RoundedCornerShape(10.dp),
@@ -312,7 +309,7 @@ private fun MonthCard(selected: LocalDate, today: LocalDate, data: AppData, onSe
                                         .align(Alignment.BottomCenter)
                                         .padding(bottom = 3.dp)
                                         .size(5.dp)
-                                        .background(GreenDeep, CircleShape)
+                                        .background(Emerald, CircleShape)
                                 )
                             }
                         }
@@ -343,7 +340,7 @@ private fun DayAgendaCard(date: LocalDate, data: AppData, onAdd: () -> Unit, mod
                 AgendaLine(kindColors(item.kind).first, "${formatMinutes(item.startMinutes)} ${item.title}")
             }
             tasks.forEach { task ->
-                AgendaLine(if (task.done) GreenDeep else Color(0xFFE3B66B), if (task.done) "${task.title} (bitti)" else task.title)
+                AgendaLine(if (task.done) Emerald else Amber, if (task.done) "${task.title} (bitti)" else task.title)
             }
         }
         Button(onClick = onAdd, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
@@ -357,7 +354,7 @@ private fun DayAgendaCard(date: LocalDate, data: AppData, onAdd: () -> Unit, mod
 @Composable
 private fun AgendaLine(dot: Color, text: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        Box(Modifier.size(10.dp).background(if (dot == BabyBlueLight) Color(0xFF7FC3DE) else dot, CircleShape))
+        Box(Modifier.size(10.dp).background(if (dot == Champagne) GoldSoft else dot, CircleShape))
         Text(text, fontWeight = FontWeight.Bold)
     }
 }

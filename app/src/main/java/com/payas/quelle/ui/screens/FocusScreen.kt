@@ -48,13 +48,7 @@ import androidx.compose.ui.unit.sp
 import com.payas.quelle.data.DAILY_FOCUS_GOAL
 import com.payas.quelle.data.TimerMode
 import com.payas.quelle.data.focusSessionsOn
-import com.payas.quelle.ui.theme.BabyBlue
-import com.payas.quelle.ui.theme.BabyBlueLight
-import com.payas.quelle.ui.theme.Green
-import com.payas.quelle.ui.theme.GreenDeep
-import com.payas.quelle.ui.theme.GreenLight
-import com.payas.quelle.ui.theme.InkMuted
-import com.payas.quelle.ui.theme.Water
+import com.payas.quelle.ui.theme.*
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 
@@ -84,7 +78,7 @@ fun FocusScreen() {
     val context = LocalContext.current
 
     Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        QuelleCard("Odak zamanlayıcı", Modifier.weight(1f).fillMaxHeight(), container = BabyBlueLight) {
+        QuelleCard("Odak zamanlayıcı", Modifier.weight(1f).fillMaxHeight(), container = Champagne) {
             Column(
                 Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -104,13 +98,13 @@ fun FocusScreen() {
                     CircularProgressIndicator(
                         progress = { if (total == 0L) 0f else remaining.toFloat() / total },
                         modifier = Modifier.fillMaxSize(),
-                        color = Water,
-                        trackColor = BabyBlue,
+                        color = Gold,
+                        trackColor = Sand,
                         strokeWidth = 14.dp,
                         strokeCap = StrokeCap.Round,
                     )
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("%02d:%02d".format(seconds / 60, seconds % 60), fontSize = 76.sp, fontWeight = FontWeight.ExtraBold)
+                        Text("%02d:%02d".format(seconds / 60, seconds % 60), fontSize = 80.sp, fontWeight = FontWeight.Light, fontFamily = Display)
                         Text(
                             (timer?.label ?: label).ifBlank { activeMode.label },
                             fontSize = 16.sp,
@@ -138,7 +132,7 @@ fun FocusScreen() {
         Column(Modifier.width(320.dp).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
             QuelleCard("Bugün") {
                 Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("${sessions.size}", fontSize = 44.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("${sessions.size}", fontSize = 46.sp, fontWeight = FontWeight.Medium, fontFamily = Display)
                     Text(
                         "oturum · ${sessions.sumOf { it.minutes }} dk odak",
                         modifier = Modifier.padding(bottom = 10.dp),
@@ -152,7 +146,7 @@ fun FocusScreen() {
                             Modifier
                                 .weight(1f)
                                 .height(10.dp)
-                                .background(if (i < sessions.size) Green else Color(0xFFD3E3E6), RoundedCornerShape(99.dp))
+                                .background(if (i < sessions.size) EmeraldSoft else LineStrong, RoundedCornerShape(99.dp))
                         )
                     }
                 }
@@ -175,7 +169,7 @@ fun FocusScreen() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .heightIn(min = 48.dp)
-                                .border(2.dp, if (selected) Water else Color(0xFFE4EEF0), RoundedCornerShape(14.dp))
+                                .border(2.dp, if (selected) Gold else Line, RoundedCornerShape(14.dp))
                                 .clickable(enabled = timer == null, role = Role.RadioButton) {
                                     label = if (selected) "" else task.title
                                 }
@@ -189,7 +183,7 @@ fun FocusScreen() {
                         val uri = Uri.parse("https://music.youtube.com/search?q=lofi+study+music")
                         context.startActivity(Intent(Intent.ACTION_VIEW, uri))
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = GreenLight, contentColor = GreenDeep),
+                    colors = ButtonDefaults.buttonColors(containerColor = Sage, contentColor = Emerald),
                     modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
                 ) {
                     Text("Odak müziği aç (YouTube Music)", fontWeight = FontWeight.ExtraBold)

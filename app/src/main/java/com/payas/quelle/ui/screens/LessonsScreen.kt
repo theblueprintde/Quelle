@@ -66,11 +66,7 @@ import com.payas.quelle.data.NoteColor
 import com.payas.quelle.data.QuelleStore
 import com.payas.quelle.data.daysUntil
 import com.payas.quelle.data.sortedAssignments
-import com.payas.quelle.ui.theme.BabyBlueLight
-import com.payas.quelle.ui.theme.GreenDeep
-import com.payas.quelle.ui.theme.GreenLight
-import com.payas.quelle.ui.theme.InkMuted
-import com.payas.quelle.ui.theme.WaterDeep
+import com.payas.quelle.ui.theme.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -103,7 +99,8 @@ fun LessonsScreen() {
                         Text(
                             if (kind == AssignmentKind.Sinav) "Sınavlar" else "Ödevler",
                             fontSize = 22.sp,
-                            fontWeight = FontWeight.ExtraBold,
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = Display,
                             modifier = Modifier.weight(1f),
                         )
                         TextButton(onClick = { assignmentDialog = AssignmentDialogState(null, kind) }) {
@@ -132,7 +129,7 @@ fun LessonsScreen() {
 
         Column(Modifier.width(420.dp).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Notlar", fontSize = 26.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
+                Text("Notlar", fontSize = 28.sp, fontWeight = FontWeight.Medium, fontFamily = Display, modifier = Modifier.weight(1f))
                 FilledIconButton(onClick = { noteDialog = NoteDialogState(null) }) {
                     Icon(Icons.Filled.Add, contentDescription = "Not ekle")
                 }
@@ -187,17 +184,17 @@ fun LessonsScreen() {
 private fun AssignmentRow(a: Assignment, today: LocalDate, onToggle: () -> Unit, onClick: () -> Unit) {
     val days = daysUntil(a.dueDate, today)
     val (badgeBg, badgeFg) = when {
-        a.done -> Color(0xFF3E7D52) to Color.White
-        days < 0 -> Color(0xFFF6D3D3) to Color(0xFF7A1F1F)
-        days <= 3 && a.kind == AssignmentKind.Sinav -> Color(0xFFF6D3D3) to Color(0xFF7A1F1F)
-        days <= 3 -> Color(0xFFFCE9C8) to Color(0xFF7A4E0E)
-        else -> BabyBlueLight to WaterDeep
+        a.done -> Emerald to Color.White
+        days < 0 -> DangerSoft to Danger
+        days <= 3 && a.kind == AssignmentKind.Sinav -> DangerSoft to Danger
+        days <= 3 -> WarnSoft to Warn
+        else -> Champagne to Midnight
     }
     Row(
         Modifier
             .fillMaxWidth()
-            .background(if (a.done) Color.White else Color(0xFFF5FBFD), RoundedCornerShape(16.dp))
-            .border(if (a.done) 2.dp else 0.dp, Color(0xFFE4EEF0), RoundedCornerShape(16.dp))
+            .background(if (a.done) Color.White else Highlight, RoundedCornerShape(16.dp))
+            .border(if (a.done) 2.dp else 0.dp, Line, RoundedCornerShape(16.dp))
             .clickable(onClickLabel = "Düzenle", role = Role.Button, onClick = onClick)
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -248,14 +245,14 @@ private fun AssignmentRow(a: Assignment, today: LocalDate, onToggle: () -> Unit,
             Text(
                 "Hazırlık %${a.progress}",
                 modifier = Modifier
-                    .background(if (a.progress >= 50) GreenLight else Color(0xFFEEF2F3), RoundedCornerShape(99.dp))
+                    .background(if (a.progress >= 50) Sage else Mist, RoundedCornerShape(99.dp))
                     .padding(horizontal = 10.dp, vertical = 4.dp),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = if (a.progress >= 50) GreenDeep else InkMuted,
+                color = if (a.progress >= 50) Emerald else InkMuted,
             )
         } else if (days < 0 && !a.done) {
-            Text("Gecikti", color = Color(0xFF7A1F1F), fontWeight = FontWeight.ExtraBold, fontSize = 13.sp)
+            Text("Gecikti", color = Danger, fontWeight = FontWeight.ExtraBold, fontSize = 13.sp)
         }
     }
 }
@@ -391,7 +388,7 @@ private fun NoteDialog(initial: Note?, onSave: (Note) -> Unit, onDelete: (() -> 
                             Modifier
                                 .size(40.dp)
                                 .background(Color(c.argb), CircleShape)
-                                .border(if (c == color) 3.dp else 1.dp, if (c == color) WaterDeep else Color(0xFFD3E3E6), CircleShape)
+                                .border(if (c == color) 3.dp else 1.dp, if (c == color) Midnight else LineStrong, CircleShape)
                                 .clickable(role = Role.RadioButton, onClickLabel = "Renk seç") { color = c },
                         )
                     }

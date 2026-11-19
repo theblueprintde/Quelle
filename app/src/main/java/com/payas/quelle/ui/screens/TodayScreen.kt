@@ -55,12 +55,7 @@ import com.payas.quelle.data.moodFor
 import com.payas.quelle.data.songFor
 import com.payas.quelle.data.quoteFor
 import com.payas.quelle.greetingFor
-import com.payas.quelle.ui.theme.BabyBlue
-import com.payas.quelle.ui.theme.BabyBlueLight
-import com.payas.quelle.ui.theme.GreenDeep
-import com.payas.quelle.ui.theme.GreenLight
-import com.payas.quelle.ui.theme.InkMuted
-import com.payas.quelle.ui.theme.Water
+import com.payas.quelle.ui.theme.*
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -89,7 +84,7 @@ fun TodayScreen() {
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Text("${greetingFor(now.hour)}, Payas", fontSize = 36.sp, fontWeight = FontWeight.ExtraBold)
+                Text("${greetingFor(now.hour)}, Payas", fontSize = 38.sp, fontWeight = FontWeight.Medium, fontFamily = Display)
             }
             MoodPicker(
                 selected = data.moodFor(todayKey),
@@ -100,9 +95,9 @@ fun TodayScreen() {
         Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
             Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
                 val quote = quoteFor(today.dayOfYear)
-                QuelleCard("Günün sözü", Modifier.fillMaxWidth(), container = BabyBlue) {
-                    Text("“${quote.text}”", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, lineHeight = 29.sp)
-                    Text(quote.author, fontWeight = FontWeight.Bold)
+                QuelleCard("Günün sözü", Modifier.fillMaxWidth(), container = Midnight, titleColor = GoldBright) {
+                    Text("“${quote.text}”", fontSize = 22.sp, fontWeight = FontWeight.Normal, fontStyle = androidx.compose.ui.text.font.FontStyle.Italic, fontFamily = Display, lineHeight = 30.sp)
+                    Text("— ${quote.author}", fontWeight = FontWeight.Medium, color = GoldBright)
                 }
                 GoalCard(
                     goal = data.goalFor(todayKey),
@@ -199,10 +194,10 @@ private fun ProgramCard(
 @Composable
 private fun ProgramRow(item: ScheduleItem, isNow: Boolean, onClick: () -> Unit) {
     val (bg, fg) = when {
-        isNow -> Water to Color.White
-        item.kind == ScheduleKind.Ders -> BabyBlueLight to MaterialTheme.colorScheme.onSurface
-        item.kind == ScheduleKind.Calisma || item.kind == ScheduleKind.Spor -> GreenLight to GreenDeep
-        else -> Color(0xFFF3F6F7) to MaterialTheme.colorScheme.onSurface
+        isNow -> Gold to Color.White
+        item.kind == ScheduleKind.Ders -> Champagne to MaterialTheme.colorScheme.onSurface
+        item.kind == ScheduleKind.Calisma || item.kind == ScheduleKind.Spor -> Sage to Emerald
+        else -> Mist to MaterialTheme.colorScheme.onSurface
     }
     Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
         Text(
@@ -251,7 +246,7 @@ private fun TasksCard(
             Text(
                 "${tasks.count { it.done }} / ${tasks.size} tamamlandı",
                 fontWeight = FontWeight.ExtraBold,
-                color = GreenDeep,
+                color = Emerald,
             )
         }
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -290,8 +285,8 @@ private fun TaskRow(task: Task, onToggle: () -> Unit, onDelete: () -> Unit) {
         Box(
             Modifier
                 .size(28.dp)
-                .background(if (task.done) Color(0xFF3E7D52) else Color.White, RoundedCornerShape(9.dp))
-                .border(2.dp, if (task.done) Color(0xFF3E7D52) else Color(0xFF9BB8BF), RoundedCornerShape(9.dp)),
+                .background(if (task.done) Emerald else Color.White, RoundedCornerShape(9.dp))
+                .border(2.dp, if (task.done) Emerald else CheckBorder, RoundedCornerShape(9.dp)),
             contentAlignment = Alignment.Center,
         ) {
             if (task.done) Icon(Icons.Filled.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))

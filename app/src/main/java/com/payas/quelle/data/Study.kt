@@ -23,11 +23,11 @@ data class Assignment(
 
 @Serializable
 enum class NoteColor(val argb: Long) {
-    Mavi(0xFFA7D8F0),
-    Yesil(0xFFDCEEDC),
-    Acik(0xFFDCEFFA),
-    Beyaz(0xFFFFFFFF),
-    Sari(0xFFFCE9C8),
+    Mavi(0xFFDCE3EE),
+    Yesil(0xFFE3EBE5),
+    Acik(0xFFF1E8D8),
+    Beyaz(0xFFFFFDFA),
+    Sari(0xFFF5E7CB),
 }
 
 @Serializable
