@@ -49,6 +49,9 @@ data class AppData(
     val notes: List<Note> = emptyList(),
     val dailyGoals: List<DailyGoal> = emptyList(),
     val weeklyReviews: List<WeeklyReview> = emptyList(),
+    /** Yönetim panelinden eklenen kendi sözlerin ve şarkıların. */
+    val customQuotes: List<Quote> = emptyList(),
+    val customSongs: List<Song> = emptyList(),
     /** Son değişiklik anı (epoch ms); senkronda hangi tarafın yeni olduğunu belirler. */
     val updatedAt: Long = 0,
 ) {

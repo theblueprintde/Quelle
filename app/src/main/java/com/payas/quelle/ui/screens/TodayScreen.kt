@@ -94,7 +94,7 @@ fun TodayScreen() {
 
         Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
             Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                val quote = quoteFor(today.dayOfYear)
+                val quote = quoteFor(today.dayOfYear, data.customQuotes)
                 QuelleCard("Günün sözü", Modifier.fillMaxWidth(), container = Midnight, titleColor = GoldBright) {
                     Text("“${quote.text}”", fontSize = 22.sp, fontWeight = FontWeight.Normal, fontStyle = androidx.compose.ui.text.font.FontStyle.Italic, fontFamily = Display, lineHeight = 30.sp)
                     Text("— ${quote.author}", fontWeight = FontWeight.Medium, color = GoldBright)
@@ -123,7 +123,7 @@ fun TodayScreen() {
             )
 
             Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                SongCard(songFor(today.dayOfYear))
+                SongCard(songFor(today.dayOfYear, data.customSongs))
                 TasksCard(
                     tasks = data.tasksFor(todayKey),
                     onAdd = { store.addTask(it, todayKey) },

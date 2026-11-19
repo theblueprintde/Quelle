@@ -51,6 +51,9 @@ class QuelleStore(private val file: File) {
         persist()
     }
 
+    /** Veri dosyasının diskteki boyutu (bayt). */
+    fun fileSize(): Long = if (file.exists()) file.length() else 0
+
     fun encode(data: AppData): String = json.encodeToString(AppData.serializer(), data)
 
     fun decode(text: String): AppData = json.decodeFromString(AppData.serializer(), text)
@@ -126,6 +129,24 @@ class QuelleStore(private val file: File) {
     fun setGoal(date: String, goal: DailyGoal?) = update { it.setGoal(goal, date) }
 
     fun saveReview(review: WeeklyReview) = update { it.saveReview(review) }
+
+    // ---- Yönetim paneli ----
+
+    /** Yedekten gelen veriyi yükler; yeni zaman damgası alır ki buluta da gitsin. */
+    fun importData(imported: AppData) = update { imported.copy(updatedAt = it.updatedAt) }
+
+    /** Tüm verileri siler (senkron açıksa buluttaki kopya da boşalır). */
+    fun resetAll() = update { AppData(updatedAt = it.updatedAt) }
+
+    fun cleanup(cleanup: Cleanup, today: java.time.LocalDate) = update { it.applyCleanup(cleanup, today) }
+
+    fun addQuote(quote: Quote) = update { it.addQuote(quote) }
+
+    fun removeQuote(index: Int) = update { it.removeQuote(index) }
+
+    fun addSong(song: Song) = update { it.addSong(song) }
+
+    fun removeSong(index: Int) = update { it.removeSong(index) }
 
     companion object {
         fun newId(): String = UUID.randomUUID().toString()

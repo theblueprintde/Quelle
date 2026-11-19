@@ -1,7 +1,9 @@
 package com.payas.quelle.data
 
+import kotlinx.serialization.Serializable
 import java.net.URLEncoder
 
+@Serializable
 data class Song(val title: String, val artist: String) {
     /** YouTube Music'te bu şarkıyı arayan bağlantı. */
     val youtubeMusicUrl: String
@@ -32,4 +34,8 @@ val SONGS = listOf(
     Song("Firework", "Katy Perry"),
 )
 
-fun songFor(dayOfYear: Int): Song = SONGS[Math.floorMod(dayOfYear, SONGS.size)]
+/** Hazır şarkılarla yönetim panelinden eklenen şarkılar birlikte sırayla döner. */
+fun songFor(dayOfYear: Int, custom: List<Song> = emptyList()): Song {
+    val all = SONGS + custom
+    return all[Math.floorMod(dayOfYear, all.size)]
+}
