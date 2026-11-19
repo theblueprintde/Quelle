@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.School
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.payas.quelle.ui.screens.AdminScreen
 import com.payas.quelle.ui.screens.CalendarScreen
 import com.payas.quelle.ui.screens.FocusScreen
 import com.payas.quelle.ui.screens.LessonsScreen
@@ -55,7 +57,11 @@ enum class Destination(val label: String, val icon: ImageVector) {
     Focus("Odak", Icons.Outlined.Timer),
     Lessons("Dersler", Icons.Outlined.School),
     Week("Hafta", Icons.Outlined.BarChart),
+    Admin("Yönetim", Icons.Outlined.AdminPanelSettings),
 }
+
+/** Üstteki ana ekranlar; yönetim paneli menünün altında, hesabın yanında durur. */
+private val mainDestinations = Destination.entries.filter { it != Destination.Admin }
 
 @Composable
 fun QuelleApp() {
@@ -92,7 +98,7 @@ fun QuelleApp() {
                 Spacer(Modifier.height(16.dp))
             },
         ) {
-            Destination.entries.forEach { dest ->
+            mainDestinations.forEach { dest ->
                 NavigationRailItem(
                     selected = current == dest,
                     onClick = { current = dest },
@@ -102,6 +108,13 @@ fun QuelleApp() {
                 )
             }
             Spacer(Modifier.weight(1f))
+            NavigationRailItem(
+                selected = current == Destination.Admin,
+                onClick = { current = Destination.Admin },
+                icon = { Icon(Destination.Admin.icon, contentDescription = null) },
+                label = { Text(Destination.Admin.label) },
+                colors = railItemColors(),
+            )
             AccountItem()
             Spacer(Modifier.height(12.dp))
         }
@@ -113,6 +126,7 @@ fun QuelleApp() {
                 Destination.Focus -> FocusScreen()
                 Destination.Lessons -> LessonsScreen()
                 Destination.Week -> WeekScreen()
+                Destination.Admin -> AdminScreen()
             }
         }
     }

@@ -44,6 +44,11 @@ class SyncManager(private val store: QuelleStore) {
     private val _status = MutableStateFlow(SyncStatus.Off)
     val status: StateFlow<SyncStatus> = _status.asStateFlow()
 
+    /** Son başarılı eşitleme anı (epoch ms); yönetim panelinde gösterilir. */
+    private val _lastSuccess = MutableStateFlow<Long?>(null)
+    val lastSuccess: StateFlow<Long?> = _lastSuccess.asStateFlow()
+
+    private var doc: DocumentReference? = null
     private var listener: ListenerRegistration? = null
     private var uploadJob: Job? = null
     private var attachedUid: String? = null
@@ -64,12 +69,14 @@ class SyncManager(private val store: QuelleStore) {
         attachedUid = user?.uid
         listener?.remove()
         uploadJob?.cancel()
+        doc = null
         if (user == null) {
             _status.value = SyncStatus.Off
             return
         }
         _status.value = SyncStatus.Syncing
         val doc = db.collection("users").document(user.uid).collection("data").document("main")
+        this.doc = doc
 
         listener = doc.addSnapshotListener { snap, error ->
             if (error != null) {
@@ -91,7 +98,10 @@ class SyncManager(private val store: QuelleStore) {
                 SyncAction.Upload -> upload(doc, local)
                 SyncAction.None -> lastSynced = local.updatedAt
             }
-            if (snap?.metadata?.hasPendingWrites() != true) _status.value = SyncStatus.Synced
+            if (snap?.metadata?.hasPendingWrites() != true) {
+                _status.value = SyncStatus.Synced
+                _lastSuccess.value = System.currentTimeMillis()
+            }
         }
 
         uploadJob = scope.launch {
@@ -105,11 +115,21 @@ class SyncManager(private val store: QuelleStore) {
         lastSynced = data.updatedAt
         _status.value = SyncStatus.Syncing
         doc.set(mapOf("json" to store.encode(data), "updatedAt" to data.updatedAt))
-            .addOnSuccessListener { _status.value = SyncStatus.Synced }
+            .addOnSuccessListener {
+                _status.value = SyncStatus.Synced
+                _lastSuccess.value = System.currentTimeMillis()
+            }
             .addOnFailureListener {
                 Log.w(TAG, "Yükleme hatası", it)
                 _status.value = SyncStatus.Error
             }
+    }
+
+    /** Yönetim panelindeki "Şimdi eşitle": yereldeki veriyi hemen buluta yazar. */
+    fun syncNow(): Boolean {
+        val target = doc ?: return false
+        upload(target, store.data.value)
+        return true
     }
 
     companion object {

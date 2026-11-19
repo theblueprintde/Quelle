@@ -1,5 +1,8 @@
 package com.payas.quelle.data
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Quote(val text: String, val author: String)
 
 /** Günün sözü: her gün listeden sıradaki söz gösterilir. */
@@ -21,4 +24,8 @@ val QUOTES = listOf(
     Quote("Az olsun, öz olsun.", "Atasözü"),
 )
 
-fun quoteFor(dayOfYear: Int): Quote = QUOTES[Math.floorMod(dayOfYear, QUOTES.size)]
+/** Hazır sözlerle yönetim panelinden eklenen sözler birlikte sırayla döner. */
+fun quoteFor(dayOfYear: Int, custom: List<Quote> = emptyList()): Quote {
+    val all = QUOTES + custom
+    return all[Math.floorMod(dayOfYear, all.size)]
+}
