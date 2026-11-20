@@ -123,22 +123,26 @@ private fun cleanTitle(s: String): String =
         .trim(' ', '-', '–', '—', ':', '|', '/', ',', ';', '•', '·', '*')
         .trim()
 
-/** Kelimeleri sayfa ve y konumuna göre satırlara toplar; her satır soldan sağa sıralı. */
+/**
+ * Kelimeleri sayfa ve taban çizgisine (alt kenar) göre satırlara toplar; her satır soldan sağa sıralı.
+ * Aynı satırdaki farklı boyuttaki yazıların üst kenarı farklı, taban çizgisi aynıdır.
+ */
 internal fun groupLines(words: List<PdfWord>): List<List<PdfWord>> {
     val result = mutableListOf<List<PdfWord>>()
     words.groupBy { it.page }.toSortedMap().forEach { (_, pageWords) ->
-        val sorted = pageWords.sortedBy { it.y }
+        val sorted = pageWords.sortedBy { it.y + it.height }
         var current = mutableListOf<PdfWord>()
         var lineY = Float.NaN
         for (w in sorted) {
-            val tol = (w.height.takeIf { it > 0 } ?: 8f) * 0.5f
-            if (current.isEmpty() || abs(w.y - lineY) <= tol) {
-                if (current.isEmpty()) lineY = w.y
+            val base = w.y + w.height
+            val tol = (w.height.takeIf { it > 0 } ?: 8f) * 0.4f
+            if (current.isEmpty() || abs(base - lineY) <= tol) {
+                if (current.isEmpty()) lineY = base
                 current += w
             } else {
                 result += current.sortedBy { it.x }
                 current = mutableListOf(w)
-                lineY = w.y
+                lineY = base
             }
         }
         if (current.isNotEmpty()) result += current.sortedBy { it.x }

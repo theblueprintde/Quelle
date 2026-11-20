@@ -41,7 +41,9 @@ object PdfWords {
                 if (current.isEmpty()) return
                 val first = current.first()
                 val last = current.last()
-                val height = current.maxOf { p -> p.heightDir }
+                // heightDir harfin gerçek yüksekliğidir ve yazı tipine göre çok değişir (14 pt yazıda ~6);
+                // satır gruplamak ve not/başlık ayırmak için yazı boyutu (yScale) daha güvenilir.
+                val height = current.maxOf { p -> p.yScale.takeIf { it > 0f } ?: p.heightDir }
                 val word = current.joinToString("") { p -> p.unicode ?: "" }.trim()
                 if (word.isNotEmpty()) {
                     words += PdfWord(
