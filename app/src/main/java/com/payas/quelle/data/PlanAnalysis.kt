@@ -35,6 +35,8 @@ object PlanRules {
     const val TOTAL_TOLERANCE = 5         // PDF toplamı ile hesap arasında kabul edilen fark (dk)
 }
 
+private const val MAX_CONFLICTS = 8
+
 /** Dinlenme değil, iş yükü sayılan öğe mi? */
 fun PlanEntry.isLoad(): Boolean =
     kind == ScheduleKind.Ders || kind == ScheduleKind.Calisma ||
@@ -80,19 +82,25 @@ fun analyzePlan(entries: List<PlanEntry>, stated: Map<Int, Map<String, Int>> = e
         return PlanReport(minutesByDay, loadByDay, byCategory, 0, listOf(Finding(Severity.Uyari, "Planda okunabilen öğe yok.")), emptyList(), nightGaps)
     }
 
-    // Çakışmalar
+    // Çakışmalar (ayrıştırma bozuk çıkarsa yüzlercesi olabilir; ekranı boğmasın diye ilk birkaçı yazılır)
+    val conflicts = mutableListOf<Finding>()
     for ((d, list) in byDay) {
         for (i in list.indices) for (j in i + 1 until list.size) {
             val a = list[i]
             val b = list[j]
             if (b.startMinutes < a.endMinutes && a.startMinutes < b.endMinutes) {
-                findings += Finding(
+                conflicts += Finding(
                     Severity.Uyari,
                     "${WEEKDAY_NAMES[d - 1]}: \"${a.title}\" (${formatMinutes(a.startMinutes)}–${formatMinutes(a.endMinutes)}) ile " +
                         "\"${b.title}\" (${formatMinutes(b.startMinutes)}–${formatMinutes(b.endMinutes)}) çakışıyor.",
                 )
             }
         }
+    }
+
+    findings += conflicts.take(MAX_CONFLICTS)
+    if (conflicts.size > MAX_CONFLICTS) {
+        findings += Finding(Severity.Uyari, "${conflicts.size - MAX_CONFLICTS} çakışma daha var. Bu kadar çok çakışma genellikle PDF'in yanlış okunduğunu gösterir; \"Okunan plan\" listesini kontrol et.")
     }
 
     // PDF'in kendi toplamlarıyla tutarlılık

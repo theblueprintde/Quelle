@@ -18,15 +18,20 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PlanImportTest {
-    /** Bir satırı kelimelere böler; her parça (metin, x) olarak verilir, kelimeler 6 pt aralıklı dizilir. */
+    /**
+     * Bir satırı kelimelere böler; her parça (metin, x) olarak verilir. y taban çizgisidir: farklı boyuttaki
+     * yazılar aynı satırda aynı tabana oturur ama üst kenarları farklıdır (gerçek PDF'teki gibi).
+     */
     private class Page(val page: Int) {
         val words = mutableListOf<PdfWord>()
-        fun line(y: Float, vararg cells: Pair<String, Float>, height: Float = 15f) {
-            for ((text, x0) in cells) {
+        fun line(y: Float, vararg cells: Pair<String, Float>, height: Float = 15f, heights: Map<Int, Float> = emptyMap()) {
+            for ((i, cell) in cells.withIndex()) {
+                val (text, x0) = cell
+                val h = heights[i] ?: height
                 var x = x0
                 text.split(" ").filter { it.isNotEmpty() }.forEach { w ->
                     val width = w.length * 6f
-                    words += PdfWord(page, x, y, width, height, w)
+                    words += PdfWord(page, x, y - h, width, h, w)
                     x += width + 3f
                 }
             }
@@ -40,7 +45,8 @@ class PlanImportTest {
         p.line(59f, "Saat" to 41f, "Ne yapılacak" to 113f, "Tür" to 420f, "Süre" to 537f, height = 11f)
         var y = 81f
         rows.forEachIndexed { i, (start, end, title, type, dur) ->
-            p.line(y, start to 41f, "–$end" to 74f, title to 122f, type to 425f, dur to 520f)
+            // Saat ve tür daha küçük yazı: üst kenarları başlıktan farklı, tabanları aynı.
+            p.line(y, start to 41f, "–$end" to 74f, title to 122f, type to 425f, dur to 520f, heights = mapOf(0 to 9f, 1 to 8f, 3 to 11f))
             y += 15f
             notes[i]?.let { p.line(y, it to 122f, height = 12.9f); y += 14f }
             y += 14f

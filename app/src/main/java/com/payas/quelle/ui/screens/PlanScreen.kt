@@ -104,8 +104,10 @@ fun PlanScreen() {
                     "Metin okundu ama gün + saat aralığı (ör. Pazartesi, 09:00–10:30) eşleşmesi bulunamadı. Okunan metin aşağıda."
             } catch (e: PdfReadException) {
                 PlanState.error = e.message
-            } catch (e: Exception) {
-                PlanState.error = "PDF okunamadı: ${e.message ?: e.javaClass.simpleName}"
+            } catch (e: Throwable) {
+                // Error dahil her şeyi yakala: bozuk/beklenmedik bir PDF uygulamayı kapatmasın.
+                if (e is kotlinx.coroutines.CancellationException) throw e
+                PlanState.error = "PDF okunamadı (${e.javaClass.simpleName}): ${e.message.orEmpty().take(200)}"
             } finally {
                 loading = false
             }
@@ -170,7 +172,7 @@ fun PlanScreen() {
             QuelleCard("Bulgular", Modifier.weight(1f).fillMaxHeight(), container = Champagne) {
                 Column(Modifier.weight(1f).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (result.report.findings.isEmpty()) Text("Belirgin bir sorun bulunmadı.", color = InkMuted)
-                    result.report.findings.forEach { FindingRow(it) }
+                    result.report.findings.take(40).forEach { FindingRow(it) }
                     if (result.report.freeSlots.isNotEmpty()) {
                         Text("PLANLANMAMIŞ BOŞLUKLAR", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp, color = InkMuted)
                         result.report.freeSlots.forEach {
@@ -184,13 +186,14 @@ fun PlanScreen() {
                     if (result.plan.layout == PlanLayout.None) {
                         Text(result.plan.rawText.take(4000), fontSize = 13.sp, color = InkMuted)
                     }
-                    result.plan.entries.groupBy { it.dayOfWeek }.forEach { (day, list) ->
+                    // Kaydırılan sütunun yüksekliği sınırlı (Compose ~260 bin px üstünü çizemez); liste makul tutulur.
+                    result.plan.entries.take(300).groupBy { it.dayOfWeek }.forEach { (day, list) ->
                         Text(WEEKDAY_NAMES[day - 1], fontSize = 20.sp, fontFamily = Display, fontWeight = FontWeight.Medium, modifier = Modifier.padding(top = 6.dp))
                         list.forEach { EntryRow(it, it.category !in PlanState.excluded) }
                     }
                     if (result.plan.unmatched.isNotEmpty()) {
                         Text("GÜNE BAĞLANAMAYAN SATIRLAR", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp, color = InkMuted)
-                        result.plan.unmatched.forEach { Text(it, fontSize = 13.sp, color = InkMuted) }
+                        result.plan.unmatched.take(30).forEach { Text(it, fontSize = 13.sp, color = InkMuted) }
                     }
                 }
             }
