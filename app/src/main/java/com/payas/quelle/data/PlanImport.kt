@@ -75,9 +75,11 @@ private val DAY_TOKENS: Map<String, Int> = buildMap {
 /** Kelime bir gün adıysa 1..7, değilse null. */
 fun dayOf(token: String): Int? = DAY_TOKENS[normalizeToken(token)]
 
+// Not: karakter sınıfı "[:" ile başlamamalı. Android'in düzenli ifade motoru (ICU) bunu
+// "[:alpha:]" gibi bir özellik adı sanıp hata veriyor; masaüstü Java'da sorun çıkmıyor.
 // 09:00-10:30, 9.00 – 10.30, 09:00 / 10:30 ... Tarihlerin (12.11.2026) saat sanılmaması için
 // sayıdan ya da noktadan sonra/önce gelen eşleşmeler alınmaz.
-private const val T = "(?<![\\d.:])([01]?\\d|2[0-4])[:.]([0-5]\\d)(?![\\d]|[.:]\\d)"
+private const val T = "(?<![\\d.:])([01]?\\d|2[0-4])[.:]([0-5]\\d)(?![\\d]|[.:]\\d)"
 private val RANGE = Regex("$T\\s*(?:-|–|—|/|ile|to)\\s*$T")
 private val SINGLE = Regex(T)
 
@@ -201,7 +203,7 @@ fun kindForCategory(category: String, title: String): ScheduleKind = when (norma
     else -> guessKind("$category $title")
 }
 
-private val TIME_TOKEN = Regex("^[–—-]?([01]?\\d|2[0-4])[:.][0-5]\\d[–—-]?$|^[–—-]$")
+private val TIME_TOKEN = Regex("^[–—-]?([01]?\\d|2[0-4])[.:][0-5]\\d[–—-]?$|^[–—-]$")
 private val DURATION_TOKEN = Regex("^(\\d+([,.]\\d+)?|sa|saat|dk|dakika)$", RegexOption.IGNORE_CASE)
 
 /**

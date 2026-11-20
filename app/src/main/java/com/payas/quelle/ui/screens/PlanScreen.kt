@@ -107,7 +107,11 @@ fun PlanScreen() {
             } catch (e: Throwable) {
                 // Error dahil her şeyi yakala: bozuk/beklenmedik bir PDF uygulamayı kapatmasın.
                 if (e is kotlinx.coroutines.CancellationException) throw e
-                PlanState.error = "PDF okunamadı (${e.javaClass.simpleName}): ${e.message.orEmpty().take(200)}"
+                // Asıl nedeni de göster (ExceptionInInitializerError gibi sarmalayan hatalarda mesaj boş gelir).
+                val chain = generateSequence(e) { it.cause }.take(4)
+                    .joinToString(" ← ") { "${it.javaClass.simpleName}: ${it.message.orEmpty().take(120)}" }
+                android.util.Log.e("Quelle", "PDF okunamadı", e)
+                PlanState.error = "PDF okunamadı. $chain"
             } finally {
                 loading = false
             }
