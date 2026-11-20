@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material.icons.outlined.WaterDrop
@@ -47,6 +48,7 @@ import com.payas.quelle.ui.screens.AdminScreen
 import com.payas.quelle.ui.screens.CalendarScreen
 import com.payas.quelle.ui.screens.FocusScreen
 import com.payas.quelle.ui.screens.LessonsScreen
+import com.payas.quelle.ui.screens.PlanScreen
 import com.payas.quelle.ui.screens.TodayScreen
 import com.payas.quelle.ui.screens.WeekScreen
 import com.payas.quelle.ui.theme.*
@@ -57,6 +59,7 @@ enum class Destination(val label: String, val icon: ImageVector) {
     Focus("Odak", Icons.Outlined.Timer),
     Lessons("Dersler", Icons.Outlined.School),
     Week("Hafta", Icons.Outlined.BarChart),
+    Plan("Plan", Icons.Outlined.Description),
     Admin("Yönetim", Icons.Outlined.AdminPanelSettings),
 }
 
@@ -126,6 +129,7 @@ fun QuelleApp() {
                 Destination.Focus -> FocusScreen()
                 Destination.Lessons -> LessonsScreen()
                 Destination.Week -> WeekScreen()
+                Destination.Plan -> PlanScreen()
                 Destination.Admin -> AdminScreen()
             }
         }

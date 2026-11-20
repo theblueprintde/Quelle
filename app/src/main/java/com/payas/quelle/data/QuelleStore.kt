@@ -83,6 +83,9 @@ class QuelleStore(private val file: File) {
         d.copy(schedule = if (exists) d.schedule.map { if (it.id == item.id) item else it } else d.schedule + item)
     }
 
+    /** Haftalık plan PDF'ini programa yerleştirir; önceki PDF öğelerinin yerine geçer. */
+    fun replacePdfSchedule(entries: List<PlanEntry>) = update { it.replacePdfSchedule(entries) { newId() } }
+
     fun deleteSchedule(id: String) = update { d -> d.copy(schedule = d.schedule.filterNot { it.id == id }) }
 
     fun saveHabit(habit: Habit) = update { d ->
