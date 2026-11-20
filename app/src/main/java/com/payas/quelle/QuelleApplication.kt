@@ -2,6 +2,7 @@ package com.payas.quelle
 
 import android.app.Application
 import com.payas.quelle.data.QuelleStore
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.payas.quelle.reminders.FocusAlarm
 import com.payas.quelle.reminders.ReminderScheduler
 import com.payas.quelle.sync.SyncManager
@@ -17,6 +18,7 @@ class QuelleApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        PDFBoxResourceLoader.init(applicationContext)
         ReminderScheduler.createChannel(this)
         sync.start()
         // Program her değiştiğinde bir sonraki hatırlatmayı yeniden kur.

@@ -61,7 +61,7 @@ import java.util.Locale
 private val tr = Locale.forLanguageTag("tr")
 private val SHORT_DAYS = listOf("Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz")
 private const val FIRST_HOUR = 7
-private const val LAST_HOUR = 23
+private const val LAST_HOUR = 24
 private val HOUR_HEIGHT = 56.dp
 
 @Composable
@@ -217,8 +217,12 @@ private fun WeekCard(
 
 @Composable
 private fun WeekBlock(item: ScheduleItem, onClick: () -> Unit) {
-    val top = (item.startMinutes - FIRST_HOUR * 60).coerceAtLeast(0)
-    val length = (item.endMinutes - item.startMinutes).coerceAtLeast(20)
+    // Izgaranın dışına taşan kısımları kırp; tamamen dışarıdakileri hiç çizme.
+    val start = item.startMinutes.coerceAtLeast(FIRST_HOUR * 60)
+    val end = item.endMinutes.coerceAtMost(LAST_HOUR * 60)
+    if (end <= start) return
+    val top = start - FIRST_HOUR * 60
+    val length = (end - start).coerceAtLeast(20)
     val (bg, fg) = kindColors(item.kind)
     Column(
         Modifier
@@ -230,8 +234,9 @@ private fun WeekBlock(item: ScheduleItem, onClick: () -> Unit) {
             .clickable(onClickLabel = "Düzenle", role = Role.Button, onClick = onClick)
             .padding(horizontal = 6.dp, vertical = 4.dp)
     ) {
-        Text(item.title, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = fg, maxLines = 2, overflow = TextOverflow.Ellipsis)
-        Text(formatMinutes(item.startMinutes), fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = fg)
+        // Kısa bloklarda (ör. 15 dk mola) yalnızca başlık sığar.
+        Text(item.title, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = fg, maxLines = if (length < 45) 1 else 2, overflow = TextOverflow.Ellipsis)
+        if (length >= 45) Text(formatMinutes(item.startMinutes), fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = fg)
     }
 }
 

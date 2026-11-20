@@ -23,8 +23,14 @@ data class ScheduleItem(
     val startMinutes: Int,
     val endMinutes: Int,
     val kind: ScheduleKind = ScheduleKind.Ders,
+    /** Öğenin nereden geldiği: null = elle eklendi, "pdf" = haftalık plan PDF'inden. */
+    val source: String? = null,
 ) {
     fun isNow(minutesOfDay: Int) = minutesOfDay in startMinutes until endMinutes
+
+    companion object {
+        const val SOURCE_PDF = "pdf"
+    }
 }
 
 @Serializable

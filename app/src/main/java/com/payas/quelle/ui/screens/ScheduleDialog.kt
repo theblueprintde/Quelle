@@ -106,6 +106,7 @@ fun ScheduleDialog(
                             startMinutes = start,
                             endMinutes = end,
                             kind = kind,
+                            source = initial?.source,
                         )
                     }
                     onSave(items)
